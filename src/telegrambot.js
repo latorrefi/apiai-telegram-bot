@@ -95,6 +95,11 @@ module.exports = class TelegramBot {
 
             let messageText = msg.text;
 
+            var telegramUserId;
+            if(msg.from){
+telegramUserId = msg.from.id;
+            }
+
             console.log(chatId, messageText);
 
             if (chatId && messageText) {
@@ -104,7 +109,14 @@ module.exports = class TelegramBot {
 
                 let apiaiRequest = this._apiaiService.textRequest(messageText,
                     {
-                        sessionId: this._sessionIds.get(chatId)
+                        sessionId: this._sessionIds.get(chatId),
+                        contexts: [
+{
+name: "user_info",
+parameters: {
+user_id: telegramUserId
+}
+}]
                     });
 
                 apiaiRequest.on('response', (response) => {
